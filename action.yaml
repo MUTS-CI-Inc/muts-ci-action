@@ -20,4 +20,4 @@ runs:
       shell: bash
       run: |
         chmod +x "${GITHUB_ACTION_PATH}/MUTS-CI"
-        "${GITHUB_ACTION_PATH}/MUTS-CI" --file-list-json="${{ inputs.project-path }}/files.json" --verbose
+        "${GITHUB_ACTION_PATH}/MUTS-CI" --file-list-json="${{ inputs.project-path }}/files.json" --print-pipeline-passes
