@@ -12,4 +12,6 @@ runs:
       uses: "docker://ekrogh18/muts-git:0.1.5"
     
     - name: "Run MUTS-CI executable"
-      uses: ./main.sh
+      shell: bash
+      run: |
+        "${GITHUB_ACTION_PATH}/main.sh" "${{ inputs.project-path }}"
