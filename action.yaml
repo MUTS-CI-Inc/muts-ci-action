@@ -10,3 +10,6 @@ runs:
   steps:
     - name: "Run MUTS-Git"
       uses: "docker://ekrogh18/muts-git:0.1.5"
+    
+    - name: "Run MUTS-CI executable"
+      uses: ./main.sh
