@@ -16,8 +16,7 @@ runs:
       run: |
         cat "${{ inputs.project-path }}/git-commits.json"
     
-    - name: "Run MUTS-CI executable"
-      shell: bash
-      run: |
-        chmod +x "${GITHUB_ACTION_PATH}/MUTS-CI"
-        ${GITHUB_ACTION_PATH}/MUTS-CI --file-list-json="${{ inputs.project-path }}/files.json"
+    - name: Run MUTS-CI
+      uses: MUTS-CI-Inc/muts-ci-action@add_action
+      with:
+        project-path: .
