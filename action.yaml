@@ -6,5 +6,7 @@ inputs:
     description: "Path to the project root"
     required: true
 runs:
-  using: "docker"
-  image: "docker://ekrogh18/muts-git:0.1.5"
+  using: "composite"
+  steps:
+    - name: "Run MUTS-Git"
+      uses: "docker://ekrogh18/muts-git:0.1.5"
