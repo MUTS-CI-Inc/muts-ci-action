@@ -1,0 +1,10 @@
+name: "MUTS-CI-Action"
+description: "Runs the mutation testing framework on a target C++ project"
+
+inputs:
+  project-path:
+    description: "Path to the project root"
+    required: true
+runs:
+  using: "docker"
+  image: "docker://ekrogh18/muts-git:0.1.5"
