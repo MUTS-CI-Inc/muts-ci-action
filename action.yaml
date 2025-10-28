@@ -14,4 +14,4 @@ runs:
     - name: "Run MUTS-CI executable"
       shell: bash
       run: |
-        bash "${GITHUB_ACTION_PATH}/main.sh" "${{ inputs.project-path }}"
+        bash "${GITHUB_ACTION_PATH}/main.sh" 
