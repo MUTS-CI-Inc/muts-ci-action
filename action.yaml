@@ -19,4 +19,4 @@ runs:
     - name: "Run MUTS-CI executable"
       shell: bash
       run: |
-        bash "${GITHUB_ACTION_PATH}/main.sh" --file-list-json="${{ inputs.project-path }}/files.json"
+        bash "${GITHUB_ACTION_PATH}/MUTS-CI" --file-list-json="${{ inputs.project-path }}/files.json"
