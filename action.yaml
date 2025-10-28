@@ -10,6 +10,11 @@ runs:
   steps:
     - name: "Run MUTS-Git"
       uses: "docker://ekrogh18/muts-git:0.1.5"
+
+    - name: Show results of MUTS-Git
+      shell: bash
+      run: |
+        cat "${{ inputs.project-path }}/git-commits.json"
     
     - name: "Run MUTS-CI executable"
       shell: bash
