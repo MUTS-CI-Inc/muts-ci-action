@@ -15,9 +15,12 @@ runs:
       shell: bash
       run: |
         cat "${{ inputs.project-path }}/git-commits.json"
+
+    - name: "Run MUTS-CI"
+      uses: "docker://ekrogh18/muts-ci:0.1.0"
     
-    - name: "Run MUTS-CI executable"
-      shell: bash
-      run: |
-        chmod +x "${GITHUB_ACTION_PATH}/MUTS-CI"
-        ${GITHUB_ACTION_PATH}/MUTS-CI --file-list-json="${{ inputs.project-path }}/files.json"
+    # - name: "Run MUTS-CI executable"
+    #   shell: bash
+    #   run: |
+    #     chmod +x "${GITHUB_ACTION_PATH}/MUTS-CI"
+    #     ${GITHUB_ACTION_PATH}/MUTS-CI --file-list-json="${{ inputs.project-path }}/files.json"
