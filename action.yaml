@@ -9,7 +9,7 @@ runs:
   using: "composite"
   steps:
     - name: "Run MUTS-Git"
-      uses: "docker://ekrogh18/muts-git:0.1.5"
+      uses: "docker://ekrogh18/muts-git:0.2.0"
 
     - name: Show results of MUTS-Git
       shell: bash
