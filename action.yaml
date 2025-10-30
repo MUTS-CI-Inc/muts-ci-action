@@ -1,27 +1,39 @@
 name: "MUTS-CI-Action"
 description: "Runs the mutation testing framework on a target C++ project"
-
 inputs:
   project-path:
     description: "Path to the project root"
     required: true
+  pr-assignees-json: # New input defined here
+    description: "JSON array of pull request assignee usernames (logins)"
+    required: false # Set to false in case the action is used outside a PR context
 runs:
   using: "composite"
   steps:
     - name: "Run MUTS-Git"
       uses: "docker://ekrogh18/muts-git:0.2.0"
-
+    
     - name: Show results of MUTS-Git
       shell: bash
       run: |
+        # This will still show the git-commits.json content
         cat "${{ inputs.project-path }}/git-commits.json"
+        
+    # New step to show the assignees (or use them in your logic)
+    - name: Show Pull Request Assignees
+      shell: bash
+      run: |
+        echo "Pull Request Assignees (JSON): ${{ inputs.pr-assignees-json }}"
+        
+        # You can use a tool like 'jq' (often pre-installed on GitHub runners) to parse the JSON
+        # Example of parsing the JSON and printing one assignee per line:
+        if [[ -n "${{ inputs.pr-assignees-json }}" ]]; then
+          echo "Assignees list:"
+          echo "${{ inputs.pr-assignees-json }}" | jq -r '.[]'
+        else
+          echo "No assignees found or not a pull request event."
+        fi
 
     - name: "Run MUTS-CI"
       uses: "docker://ekrogh18/muts-ci:0.2.0_old_urindev"
       continue-on-error: true
-    
-    # - name: "Run MUTS-CI executable"
-    #   shell: bash
-    #   run: |
-    #     chmod +x "${GITHUB_ACTION_PATH}/MUTS-CI"
-    #     ${GITHUB_ACTION_PATH}/MUTS-CI --file-list-json="${{ inputs.project-path }}/files.json"
