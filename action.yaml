@@ -6,7 +6,7 @@ inputs:
     required: true
   pr-assignees-json: # New input defined here
     description: "JSON array of pull request assignee usernames (logins)"
-    required: false # Set to false in case the action is used outside a PR context
+    required: true # Set to false in case the action is used outside a PR context
 runs:
   using: "composite"
   steps:
