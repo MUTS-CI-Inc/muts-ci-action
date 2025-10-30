@@ -17,7 +17,7 @@ runs:
         cat "${{ inputs.project-path }}/git-commits.json"
 
     - name: "Run MUTS-CI"
-      uses: "docker://ekrogh18/muts-ci:0.1.0"
+      uses: "docker://ekrogh18/muts-ci:0.2.0_old_urindev"
     
     # - name: "Run MUTS-CI executable"
     #   shell: bash
