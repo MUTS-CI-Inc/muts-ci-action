@@ -13,27 +13,46 @@ runs:
     - name: "Run MUTS-Git"
       uses: "docker://ekrogh18/muts-git:0.2.0"
     
-    - name: Show results of MUTS-Git
-      shell: bash
-      run: |
-        # This will still show the git-commits.json content
-        cat "${{ inputs.project-path }}/git-commits.json"
-        
-    # New step to show the assignees (or use them in your logic)
-    - name: Show Pull Request Assignees
-      shell: bash
-      run: |
-        echo "Pull Request Assignees (JSON): ${{ inputs.pr-assignees-json }}"
-        
-        # You can use a tool like 'jq' (often pre-installed on GitHub runners) to parse the JSON
-        # Example of parsing the JSON and printing one assignee per line:
-        if [[ -n "${{ inputs.pr-assignees-json }}" ]]; then
-          echo "Assignees list:"
-          echo "${{ inputs.pr-assignees-json }}" | jq -r '.[]'
-        else
-          echo "No assignees found or not a pull request event."
-        fi
+    # New Step: Get Assignee Details and Format Output
+    - name: Get Assignee Details and Set Environment Variable
+      uses: actions/github-script@v7
+      id: format_authors
+      with:
+        # Use the default token. The 'contents' permission should be sufficient 
+        # for reading public profile data.
+        github-token: ${{ github.token }}
+        script: |
+          const assigneesJson = `${{ inputs.pr-assignees-json }}`;
+          const assignees = JSON.parse(assigneesJson || '[]');
+          
+          let targetAuthors = [];
+          
+          for (const login of assignees) {
+            // 1. Fetch user details from the GitHub API
+            // This gives you the 'name' and public 'email' from the user's profile.
+            const { data: user } = await github.rest.users.getByUsername({
+              username: login
+            });
 
-    - name: "Run MUTS-CI"
+            // 2. Determine the name and email
+            // Fallback to a constructed name/email if profile fields are empty.
+            const name = user.name || login;
+            const email = user.email || `${login}@users.noreply.github.com`;
+            
+            // 3. Format the string for the environment variable
+            targetAuthors.push(`${name} <${email}>`);
+          }
+
+          const envVarValue = `[${targetAuthors.join(', ')}]`;
+
+          // 4. Export the environment variable for subsequent steps
+          console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
+          console.log(`TARGET_AUTHORS=${envVarValue}` >> "${{ github.env }}");
+
+    # ... (The rest of your steps, like Run MUTS-CI, can now access the variable)
+    - name: Run MUTS-CI
       uses: "docker://ekrogh18/muts-ci:0.2.0_old_urindev"
+      env:
+        # The variable is now available as a regular environment variable
+        TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }} 
       continue-on-error: true
