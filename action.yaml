@@ -10,15 +10,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # New Step: Get Assignee Details and Format Output
+
     - name: Get Assignee Details and Set Environment Variable
       uses: actions/github-script@v7
       id: format_authors
       with:
-        # Use the default token. The 'contents' permission should be sufficient 
-        # for reading public profile data.
         github-token: ${{ github.token }}
+        # Add the 'core' library to the script for exportVariable
         script: |
+          const core = require('@actions/core');
           const assigneesJson = `${{ inputs.pr-assignees-json }}`;
           const assignees = JSON.parse(assigneesJson || '[]');
           
@@ -26,27 +26,32 @@ runs:
           
           for (const login of assignees) {
             // 1. Fetch user details from the GitHub API
-            // This gives you the 'name' and public 'email' from the user's profile.
             const { data: user } = await github.rest.users.getByUsername({
               username: login
             });
 
             // 2. Determine the name and email
-            // Fallback to a constructed name/email if profile fields are empty.
+            // Use the user's name or login, and a reliable email address.
             const name = user.name || login;
             const email = user.email || `${login}@users.noreply.github.com`;
             
-            // 3. Format the string for the environment variable
+            // 3. Format the string for the environment variable, e.g., 'John <john@email.com>'
             targetAuthors.push(`${name} <${email}>`);
           }
 
-          const envVarValue = JSON.stringify(targetAuthors);
+          // **FIX 1: Format as a single string, not a JSON array**
+          // Output: 'John <john@email.com>, Eva <eva@email.com>'
+          const authorsListString = targetAuthors.join(', ');
+          // Final desired export format: '[John <john@email.com>, Eva <eva@email.com>]'
+          const envVarValue = `[${authorsListString}]`;
 
           // 4. Export the environment variable for subsequent steps
           console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
+          
+          // **FIX 2: Use core.exportVariable for reliable export**
           core.exportVariable('TARGET_AUTHORS', envVarValue);
 
-    # ... (The rest of your steps, like Run MUTS-CI, can now access the variable)
+
     - name: "Run MUTS-Git"
       uses: "docker://ekrogh18/muts-git:0.2.0"
 
