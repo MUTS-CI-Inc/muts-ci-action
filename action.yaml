@@ -49,6 +49,12 @@ runs:
     # ... (The rest of your steps, like Run MUTS-CI, can now access the variable)
     - name: "Run MUTS-Git"
       uses: "docker://ekrogh18/muts-git:0.2.0"
+
+    - name: Show result of MUTS-Git
+      shell: bash
+      run: |
+        cat git-commits.json
+    
     - name: Run MUTS-CI
       uses: "docker://ekrogh18/muts-ci:0.2.0_old_urindev"
       env:
