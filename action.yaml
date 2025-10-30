@@ -18,7 +18,7 @@ runs:
 
     - name: "Run MUTS-CI"
       uses: "docker://ekrogh18/muts-ci:0.2.0_old_urindev"
-      continues-on-error: true
+      continue-on-error: true
     
     # - name: "Run MUTS-CI executable"
     #   shell: bash
