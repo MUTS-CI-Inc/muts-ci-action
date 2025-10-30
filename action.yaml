@@ -40,7 +40,7 @@ runs:
             targetAuthors.push(`${name} <${email}>`);
           }
 
-          const envVarValue = `[${targetAuthors.join(', ')}]`;
+          const envVarValue = JSON.stringify(targetAuthors);
 
           // 4. Export the environment variable for subsequent steps
           console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
