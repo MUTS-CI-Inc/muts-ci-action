@@ -44,7 +44,7 @@ runs:
 
           // 4. Export the environment variable for subsequent steps
           console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
-          console.log(`TARGET_AUTHORS=${envVarValue}` >> "${{ github.env }}");
+          echo `TARGET_AUTHORS=${envVarValue}` >> "${{ github.env }}";
 
     # ... (The rest of your steps, like Run MUTS-CI, can now access the variable)
     - name: "Run MUTS-Git"
