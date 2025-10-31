@@ -33,15 +33,13 @@ runs:
             const name = user.name || login;
             const email = user.email || `${login}@users.noreply.github.com`;
             
-            // 3. Format the string for the environment variable, e.g., 'John <john@email.com>'
+            // 3. Format the string for the environment variable
             targetAuthors.push(`${name} <${email}>`);
           }
 
-          // **FIX 1: Format as a single string, not a JSON array**
-          // Output: 'John <john@email.com>, Eva <eva@email.com>'
-          const authorsListString = targetAuthors.join(', ');
-          // Final desired export format: '[John <john@email.com>, Eva <eva@email.com>]'
-          const envVarValue = `[${authorsListString}]`;
+          // Format as JSON array string wrapped in single quotes
+          // Final format: '["john <john@email.com>", "eva <eva@email.com>"]'
+          const envVarValue = `'${JSON.stringify(targetAuthors)}'`;
 
           // 4. Export the environment variable for subsequent steps
           console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
