@@ -1,9 +1,4 @@
 module.exports = async ({github, context, core}) => {
-  const assigneesJson = process.env.PR_ASSIGNEES_JSON;
-  const assignees = JSON.parse(assigneesJson || '[]');
-  
-  let targetAuthors = [];
-  
   // Get commits from the repository
   let commits;
   try {
@@ -29,26 +24,27 @@ module.exports = async ({github, context, core}) => {
     commits = repoCommits;
   }
   
-  for (const login of assignees) {
-    let name = login;
-    let email = `${login}@users.noreply.github.com`;
-    
-    // Find any commit by this user and use the commit author info (not the GitHub author)
-    for (const commit of commits) {
-      if (commit.author && commit.author.login === login && commit.commit.author) {
-        name = commit.commit.author.name || name;
-        email = commit.commit.author.email || email;
-        // Use the first match that has a non-noreply email
-        if (!email.includes('noreply.github.com')) {
-          break;
-        }
+  // Extract unique authors from commits
+  const authorsMap = new Map();
+  
+  for (const commit of commits) {
+    if (commit.commit.author) {
+      const name = commit.commit.author.name;
+      const email = commit.commit.author.email;
+      
+      // Use email as key to avoid duplicates
+      // Prefer non-noreply emails
+      if (!authorsMap.has(email) || !email.includes('noreply.github.com')) {
+        authorsMap.set(email, `${name} <${email}>`);
       }
     }
-    
-    targetAuthors.push(`${name} <${email}>`);
   }
+  
+  // Convert map values to array
+  const targetAuthors = Array.from(authorsMap.values());
   
   const envVarValue = JSON.stringify(targetAuthors);
   console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
+  console.log(`Found ${targetAuthors.length} unique author(s) in the PR`);
   core.exportVariable('TARGET_AUTHORS', envVarValue);
 };

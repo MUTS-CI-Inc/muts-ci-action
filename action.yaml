@@ -4,18 +4,13 @@ inputs:
   project-path:
     description: "Path to the project root"
     required: true
-  pr-assignees-json: # New input defined here
-    description: "JSON array of pull request assignee usernames (logins)"
-    required: false # Set to false in case the action is used outside a PR context
 runs:
   using: "composite"
   steps:
 
-    - name: Get Assignee Details and Set Environment Variable
+    - name: Get Pull Request Authors and Set Environment Variable
       uses: actions/github-script@v7
-      id: format_authors
-      env:
-        PR_ASSIGNEES_JSON: ${{ inputs.pr-assignees-json }}
+      id: get_pr_authors
       with:
         github-token: ${{ github.token }}
         script: |
