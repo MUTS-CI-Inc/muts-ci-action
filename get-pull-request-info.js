@@ -53,6 +53,9 @@ module.exports = async ({github, context, core}) => {
   const authorsEnvValue = JSON.stringify(targetAuthors);
   console.log(`Setting TARGET_AUTHORS to: ${authorsEnvValue}`);
   console.log(`Found ${targetAuthors.length} unique author(s) in the PR`);
+  for (const [email, count] of commitCountMap.entries()) {
+    console.log(`Found ${count} commit(s) by: ${authorsMap.get(email)}`);
+  }
   console.log(`Setting TARGET_COMMIT_COUNT to: ${maxCommitCount}`);
   
   core.exportVariable('TARGET_AUTHORS', authorsEnvValue);
