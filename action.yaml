@@ -27,7 +27,7 @@ runs:
         cat git-commits.json
     
     - name: Run MUTS-CI
-      uses: "docker://ekrogh18/muts-ci:0.2.0_old_urindev"
+      uses: "docker://ekrogh18/muts-ci:0.2.0_new_urindev"
       with:
         args: "--file-list-json=./git-commits.json"
       env:
