@@ -24,8 +24,9 @@ module.exports = async ({github, context, core}) => {
     commits = repoCommits;
   }
   
-  // Extract unique authors from commits
+  // Extract unique authors from commits and count commits per author
   const authorsMap = new Map();
+  const commitCountMap = new Map();
   
   for (const commit of commits) {
     if (commit.commit.author) {
@@ -37,14 +38,23 @@ module.exports = async ({github, context, core}) => {
       if (!authorsMap.has(email) || !email.includes('noreply.github.com')) {
         authorsMap.set(email, `${name} <${email}>`);
       }
+      
+      // Count commits per author
+      commitCountMap.set(email, (commitCountMap.get(email) || 0) + 1);
     }
   }
   
   // Convert map values to array
   const targetAuthors = Array.from(authorsMap.values());
   
-  const envVarValue = JSON.stringify(targetAuthors);
-  console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
+  // Find the maximum commit count
+  const maxCommitCount = Math.max(...Array.from(commitCountMap.values()), 0);
+  
+  const authorsEnvValue = JSON.stringify(targetAuthors);
+  console.log(`Setting TARGET_AUTHORS to: ${authorsEnvValue}`);
   console.log(`Found ${targetAuthors.length} unique author(s) in the PR`);
-  core.exportVariable('TARGET_AUTHORS', envVarValue);
+  console.log(`Setting TARGET_COMMIT_COUNT to: ${maxCommitCount}`);
+  
+  core.exportVariable('TARGET_AUTHORS', authorsEnvValue);
+  core.exportVariable('TARGET_COMMIT_COUNT', maxCommitCount.toString());
 };

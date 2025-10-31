@@ -29,6 +29,6 @@ runs:
     - name: Run MUTS-CI
       uses: "docker://ekrogh18/muts-ci:0.2.0_old_urindev"
       env:
-        # The variable is now available as a regular environment variable
-        TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }} 
+        TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }}
+        TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
       continue-on-error: true
