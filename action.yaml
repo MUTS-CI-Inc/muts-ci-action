@@ -37,14 +37,12 @@ runs:
             targetAuthors.push(`${name} <${email}>`);
           }
 
-          // Format as JSON array string wrapped in single quotes
-          // Final format: '["john <john@email.com>", "eva <eva@email.com>"]'
-          const envVarValue = `'${JSON.stringify(targetAuthors)}'`;
+          // Format as JSON array string
+          // Final format: ["john <john@email.com>", "eva <eva@email.com>"]
+          const envVarValue = JSON.stringify(targetAuthors);
 
           // 4. Export the environment variable for subsequent steps
           console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
-          
-          // **FIX 2: Use core.exportVariable for reliable export**
           core.exportVariable('TARGET_AUTHORS', envVarValue);
 
 
