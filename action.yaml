@@ -29,7 +29,7 @@ runs:
     - name: Run MUTS-CI
       uses: "docker://ekrogh18/muts-ci:0.2.0_new_urindev"
       with:
-        args: "--file-list-json=./git-commits.json"
+        args: "--file-list-json=$GITHUB_WORKSPACE/git-commits.json"
       env:
         TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }}
         TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
