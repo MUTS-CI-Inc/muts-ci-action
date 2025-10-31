@@ -22,26 +22,30 @@ runs:
           
           let targetAuthors = [];
           
+          // Get all commits from the repository
+          const { data: commits } = await github.rest.repos.listCommits({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            per_page: 100
+          });
+          
           for (const login of assignees) {
-            // 1. Fetch user details from the GitHub API
-            const { data: user } = await github.rest.users.getByUsername({
-              username: login
-            });
-
-            // 2. Determine the name and email
-            // Use the user's name or login, and a reliable email address.
-            const name = user.name || login;
-            const email = user.email || `${login}@users.noreply.github.com`;
+            // Find commits by this user's GitHub login
+            const userCommits = commits.filter(c => c.author && c.author.login === login);
             
-            // 3. Format the string for the environment variable
+            let name = login;
+            let email = `${login}@users.noreply.github.com`;
+            
+            // Use the email from their actual commits
+            if (userCommits.length > 0 && userCommits[0].commit.author) {
+              name = userCommits[0].commit.author.name || name;
+              email = userCommits[0].commit.author.email || email;
+            }
+            
             targetAuthors.push(`${name} <${email}>`);
           }
-
-          // Format as JSON array string
-          // Final format: ["john <john@email.com>", "eva <eva@email.com>"]
+          
           const envVarValue = JSON.stringify(targetAuthors);
-
-          // 4. Export the environment variable for subsequent steps
           console.log(`Setting TARGET_AUTHORS to: ${envVarValue}`);
           core.exportVariable('TARGET_AUTHORS', envVarValue);
 
