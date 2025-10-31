@@ -22,16 +22,23 @@ runs:
           
           let targetAuthors = [];
           
-          // Get PR commits if in a PR context, otherwise get recent commits
+          // Get commits from the repository
           let commits;
-          if (context.payload.pull_request) {
-            const { data: prCommits } = await github.rest.pulls.listCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number
-            });
-            commits = prCommits;
-          } else {
+          try {
+            // Try to get PR commits if in a PR context
+            if (context.payload.pull_request) {
+              const { data: prCommits } = await github.rest.pulls.listCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number
+              });
+              commits = prCommits;
+            } else {
+              throw new Error('Not in PR context');
+            }
+          } catch (error) {
+            // Fall back to repository commits if PR commits are not accessible
+            console.log('Unable to fetch PR commits, falling back to repository commits');
             const { data: repoCommits } = await github.rest.repos.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
