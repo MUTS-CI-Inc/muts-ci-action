@@ -22,24 +22,38 @@ runs:
           
           let targetAuthors = [];
           
-          // Get all commits from the repository
-          const { data: commits } = await github.rest.repos.listCommits({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            per_page: 100
-          });
+          // Get PR commits if in a PR context, otherwise get recent commits
+          let commits;
+          if (context.payload.pull_request) {
+            const { data: prCommits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+            commits = prCommits;
+          } else {
+            const { data: repoCommits } = await github.rest.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            commits = repoCommits;
+          }
           
           for (const login of assignees) {
-            // Find commits by this user's GitHub login
-            const userCommits = commits.filter(c => c.author && c.author.login === login);
-            
             let name = login;
             let email = `${login}@users.noreply.github.com`;
             
-            // Use the email from their actual commits
-            if (userCommits.length > 0 && userCommits[0].commit.author) {
-              name = userCommits[0].commit.author.name || name;
-              email = userCommits[0].commit.author.email || email;
+            // Find any commit by this user and use the commit author info (not the GitHub author)
+            for (const commit of commits) {
+              if (commit.author && commit.author.login === login && commit.commit.author) {
+                name = commit.commit.author.name || name;
+                email = commit.commit.author.email || email;
+                // Use the first match that has a non-noreply email
+                if (!email.includes('noreply.github.com')) {
+                  break;
+                }
+              }
             }
             
             targetAuthors.push(`${name} <${email}>`);
