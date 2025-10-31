@@ -24,6 +24,7 @@ runs:
     - name: Show result of MUTS-Git
       shell: bash
       run: |
+        ls -la
         cat git-commits.json
     
     - name: Run MUTS-CI
