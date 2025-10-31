@@ -1,15 +1,22 @@
 module.exports = async ({github, context, core}) => {
   // Get commits from the repository
-  let commits;
+  let commits = [];
   try {
     // Try to get PR commits if in a PR context
     if (context.payload.pull_request) {
-      const { data: prCommits } = await github.rest.pulls.listCommits({
+      // Fetch all commits using pagination
+      const iterator = github.paginate.iterator(github.rest.pulls.listCommits, {
         owner: context.repo.owner,
         repo: context.repo.repo,
-        pull_number: context.payload.pull_request.number
+        pull_number: context.payload.pull_request.number,
+        per_page: 100
       });
-      commits = prCommits;
+      
+      for await (const response of iterator) {
+        commits.push(...response.data);
+      }
+      
+      console.log(`Fetched ${commits.length} total commit(s) from PR`);
     } else {
       console.log('Not in PR context - skipping TARGET_AUTHORS setup');
       return;
