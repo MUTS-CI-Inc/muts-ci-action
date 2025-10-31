@@ -16,9 +16,7 @@ runs:
       id: format_authors
       with:
         github-token: ${{ github.token }}
-        # Add the 'core' library to the script for exportVariable
         script: |
-          const core = require('@actions/core');
           const assigneesJson = `${{ inputs.pr-assignees-json }}`;
           const assignees = JSON.parse(assigneesJson || '[]');
           
