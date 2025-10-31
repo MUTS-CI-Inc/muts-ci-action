@@ -11,17 +11,14 @@ module.exports = async ({github, context, core}) => {
       });
       commits = prCommits;
     } else {
-      throw new Error('Not in PR context');
+      console.log('Not in PR context - skipping TARGET_AUTHORS setup');
+      return;
     }
   } catch (error) {
-    // Fall back to repository commits if PR commits are not accessible
-    console.log('Unable to fetch PR commits, falling back to repository commits');
-    const { data: repoCommits } = await github.rest.repos.listCommits({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      per_page: 100
-    });
-    commits = repoCommits;
+    console.log('Unable to fetch PR commits - skipping TARGET_AUTHORS setup');
+    console.log('Error:', error.message);
+    console.log('Please ensure the workflow has "pull-requests: read" permission');
+    return;
   }
   
   // Extract unique authors from commits and count commits per author
