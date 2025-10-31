@@ -48,13 +48,15 @@ module.exports = async ({github, context, core}) => {
   const maxCommitCount = Math.max(...Array.from(commitCountMap.values()), 0);
   
   const authorsEnvValue = JSON.stringify(targetAuthors);
-  console.log(`Setting TARGET_AUTHORS to: ${authorsEnvValue}`);
+  console.log(`Analyzing PR #${context.payload.pull_request.number}: "${context.payload.pull_request.title}"`);
+  console.log(`Branch: ${context.payload.pull_request.head.ref} -> ${context.payload.pull_request.base.ref}`);
+  console.log(`Setting system environment variable TARGET_AUTHORS to: ${authorsEnvValue}`);
   console.log(`Found ${targetAuthors.length} unique author(s) in the PR`);
   for (const [email, count] of commitCountMap.entries()) {
     console.log(`Found ${count} commit(s) by: ${authorsMap.get(email)}`);
   }
-  console.log(`Setting TARGET_COMMIT_COUNT to: ${maxCommitCount}`);
-  
+  console.log(`Setting system environment variable TARGET_COMMIT_COUNT to: ${maxCommitCount}`);
+
   core.exportVariable('TARGET_AUTHORS', authorsEnvValue);
   core.exportVariable('TARGET_COMMIT_COUNT', maxCommitCount.toString());
 };
