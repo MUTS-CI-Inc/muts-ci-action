@@ -1,0 +1,36 @@
+name: "MUTS-CI-Action"
+description: "Runs the mutation testing framework on a target C++ project"
+inputs:
+  project-path:
+    description: "Path to the project root"
+    required: true
+runs:
+  using: "composite"
+  steps:
+
+    - name: Get Pull Request Authors and Set Environment Variable
+      uses: actions/github-script@v7
+      id: get_pr_authors
+      with:
+        github-token: ${{ github.token }}
+        script: |
+          const script = require('${{ github.action_path }}/get-pull-request-info.js');
+          await script({github, context, core});
+
+
+    - name: "Run MUTS-Git"
+      uses: "docker://ekrogh18/muts-git:0.2.0"
+
+    - name: Show result of MUTS-Git
+      shell: bash
+      run: |
+        cat git-commits.json
+    
+    - name: Run MUTS-CI
+      uses: "docker://ekrogh18/muts-ci:0.2.0_new_urindev"
+      with:
+        args: "--file-list-json=/github/workspace/git-commits.json"
+      env:
+        TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }}
+        TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
+      continue-on-error: true
