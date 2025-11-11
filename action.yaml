@@ -32,8 +32,8 @@ runs:
     - name: Check for stddef.h
       shell: bash
       run: |
-        echo "Checking stddef.h"
-        ls /usr/include/stddef.h || echo "❌ Missing"
+        echo $C_INCLUDE_PATH
+        echo $CPLUS_INCLUDE_PATH
 
     - name: Run MUTS-CI
       shell: bash
