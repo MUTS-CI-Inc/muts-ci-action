@@ -29,12 +29,6 @@ runs:
     - name: "Run MUTS-CI image to get MUTS-CI binary"
       uses: "docker://ekrogh18/muts-ci:0.2.1"
 
-    - name: Check for stddef.h
-      shell: bash
-      run: |
-        echo $C_INCLUDE_PATH
-        echo $CPLUS_INCLUDE_PATH
-
     - name: Run MUTS-CI
       shell: bash
       env:
