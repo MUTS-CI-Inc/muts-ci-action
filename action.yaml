@@ -30,6 +30,7 @@ runs:
       uses: "docker://ekrogh18/muts-ci:0.2.1"
 
     - name: Check for stddef.h
+      shell: bash
       run: |
         echo "Checking stddef.h"
         ls /usr/include/stddef.h || echo "❌ Missing"
