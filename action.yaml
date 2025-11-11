@@ -19,7 +19,7 @@ runs:
 
 
     - name: "Run MUTS-Git"
-      uses: "docker://ekrogh18/muts-git:0.2.0"
+      uses: "docker://ekrogh18/muts-git:0.2.1"
 
     - name: Show result of MUTS-Git
       shell: bash
@@ -27,10 +27,14 @@ runs:
         cat git-commits.json
     
     - name: Run MUTS-CI
-      uses: "docker://ekrogh18/muts-ci:0.2.0"
-      with:
-        args: "--file-list-json=/github/workspace/git-commits.json"
+      shell: bash
       env:
         TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }}
         TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
       continue-on-error: true
+      run: |
+        exe="$GITHUB_WORKSPACE/muts-ci"
+        if [ ! -x "$exe" ]; then
+          chmod +x "$exe" || true
+        fi
+        "$exe" --file-list-json=$GITHUB_WORKSPACE/git-commits.json
