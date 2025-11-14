@@ -25,6 +25,7 @@ runs:
       shell: bash
       run: |
         cat git-commits.json
+        echo $TARGET_REPO_PATH
 
     - name: "Run MUTS-CI image to get MUTS-CI binary"
       uses: "docker://ekrogh18/muts-ci:0.2.1"
