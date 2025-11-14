@@ -41,4 +41,4 @@ runs:
         if [ ! -x "$exe" ]; then
           chmod +x "$exe" || true
         fi
-        "$exe" --file-list-json=$GITHUB_WORKSPACE/git-commits.json
+        "$exe" --file-list-json=$GITHUB_WORKSPACE/${TARGET_LEAF}/git-commits.json
