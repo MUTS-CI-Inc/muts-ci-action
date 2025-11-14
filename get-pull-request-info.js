@@ -7,13 +7,13 @@ module.exports = async ({ github, context, core }) => {
 
   if (baseCommit && headCommit) {
   console.log(`Environment override detected.`);
-  console.log(`Using commit range: ${headCommit}..${baseCommit}`);
+  console.log(`Using commit range: ${baseCommit}..${headCommit}`);
   const { execSync } = require("child_process");
 
   try {
     // Get authors from git log between commits
     const authorOutput = execSync(
-      `git log --format="%an <%ae>" ${headCommit}..${baseCommit}`,
+      `git log --format="%an <%ae>" ${baseCommit}..${headCommit}`,
       { encoding: "utf8" }
     );
 
