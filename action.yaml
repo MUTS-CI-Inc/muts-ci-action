@@ -36,8 +36,8 @@ runs:
         TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
       continue-on-error: true
       run: |
-        ls -la 
-        exe="$GITHUB_WORKSPACE/${TARGET_LEAF}/MUTS-CI"
+        cd $GITHUB_WORKSPACE/${TARGET_LEAF}
+        exe="./MUTS-CI"
         if [ ! -x "$exe" ]; then
           chmod +x "$exe" || true
         fi
