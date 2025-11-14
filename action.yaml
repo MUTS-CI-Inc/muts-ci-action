@@ -19,7 +19,9 @@ runs:
 
 
     - name: "Run MUTS-Git"
-      uses: "docker://ekrogh18/muts-git:0.2.0"
+      uses: "docker://ekrogh18/muts-git:0.2.1"
+      env:
+        TARGET_REPO_PATH: ${{ env.TARGET_REPO_PATH }}
 
     - name: Show result of MUTS-Git
       shell: bash

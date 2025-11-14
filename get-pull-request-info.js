@@ -100,7 +100,7 @@ if (baseCommit && headCommit) {
   const authorsEnvValue = JSON.stringify(targetAuthors);
   console.log(`Setting system environment variable TARGET_AUTHORS = ${authorsEnvValue}`);
   console.log(`Setting system environment variable TARGET_COMMIT_COUNT = ${maxCommitCount}`);
-  console.log(`Setting system environment variable TARGET_REPO_PATH = ${process.env.INPUT_PROJECT_PATH}`);
+  console.log(`Setting system environment variable TARGET_REPO_PATH = ${process.env.INPUT_PROJECT_PATH }`);
 
   core.exportVariable("TARGET_AUTHORS", authorsEnvValue);
   core.exportVariable("TARGET_COMMIT_COUNT", maxCommitCount.toString());
