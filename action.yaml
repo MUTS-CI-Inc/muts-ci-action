@@ -25,7 +25,6 @@ runs:
       shell: bash
       run: |
         cat git-commits.json
-        echo $TARGET_REPO_PATH
 
     - name: "Run MUTS-CI image to get MUTS-CI binary"
       uses: "docker://ekrogh18/muts-ci:0.2.2"
@@ -37,8 +36,9 @@ runs:
         TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
       continue-on-error: true
       run: |
+        ls -la 
         exe="$GITHUB_WORKSPACE/${TARGET_LEAF}/MUTS-CI"
         if [ ! -x "$exe" ]; then
           chmod +x "$exe" || true
         fi
-        "$exe" --file-list-json=$GITHUB_WORKSPACE/${TARGET_LEAF}/git-commits.json
+        "$exe" --file-list-json=$GITHUB_WORKSPACE/git-commits.json
