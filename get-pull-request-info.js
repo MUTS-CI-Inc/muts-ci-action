@@ -2,19 +2,18 @@ module.exports = async ({ github, context, core }) => {
   let commits = [];
 
   // --- NEW FEATURE: Allow override via environment variables ---
-  const startCommit = process.env.start_commit;
-  const endCommit = process.env.end_commit;
+  const baseCommit = process.env.base_commit;
+  const headCommit = process.env.head_commit;
 
-  if (startCommit && endCommit) {
+  if (baseCommit && headCommit) {
   console.log(`Environment override detected.`);
-  console.log(`Using commit range: ${endCommit}..${startCommit}`);
-
+  console.log(`Using commit range: ${headCommit}..${baseCommit}`);
   const { execSync } = require("child_process");
 
   try {
     // Get authors from git log between commits
     const authorOutput = execSync(
-      `git log --format="%an <%ae>" ${endCommit}..${startCommit}`,
+      `git log --format="%an <%ae>" ${headCommit}..${baseCommit}`,
       { encoding: "utf8" }
     );
 
@@ -36,8 +35,8 @@ module.exports = async ({ github, context, core }) => {
     // Export variables
     core.exportVariable("TARGET_AUTHORS", JSON.stringify(authors));
     core.exportVariable("TARGET_COMMIT_COUNT", commitCount.toString());
-    core.exportVariable("TARGET_START_COMMIT", startCommit);
-    core.exportVariable("TARGET_END_COMMIT", endCommit);
+    // core.exportVariable("TARGET_START_COMMIT", baseCommit);
+    // core.exportVariable("TARGET_END_COMMIT", headCommit);
 
     // We're done — skip GitHub API logic completely
     return;
