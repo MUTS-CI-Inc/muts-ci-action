@@ -4,7 +4,8 @@ module.exports = async ({ github, context, core }) => {
 // --- NEW FEATURE: Allow override via environment variables ---
 const baseCommit = process.env.base_commit;
 const headCommit = process.env.head_commit;
-const leaf = process.env.leaf;
+const leaf = process.env.TARGET_LEAF;
+
 
 if (baseCommit && headCommit) {
   console.log(`Environment override detected.`);
@@ -37,7 +38,7 @@ if (baseCommit && headCommit) {
     core.exportVariable("TARGET_AUTHORS", JSON.stringify(authors));
     core.exportVariable("TARGET_COMMIT_COUNT", commitCount.toString());
     core.exportVariable("TARGET_REPO_PATH", projectPath);
-    core.exportVariable("leaf", leaf);
+    core.exportVariable("TARGET_LEAF", leaf);
     // core.exportVariable("TARGET_START_COMMIT", baseCommit);
     // core.exportVariable("TARGET_END_COMMIT", headCommit);
 
