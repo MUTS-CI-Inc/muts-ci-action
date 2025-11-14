@@ -37,7 +37,7 @@ if (baseCommit && headCommit) {
     core.exportVariable("TARGET_AUTHORS", JSON.stringify(authors));
     core.exportVariable("TARGET_COMMIT_COUNT", commitCount.toString());
     core.exportVariable("TARGET_REPO_PATH", projectPath);
-    core.exportVariable("leaf_commit", leaf);
+    core.exportVariable("leaf", leaf);
     // core.exportVariable("TARGET_START_COMMIT", baseCommit);
     // core.exportVariable("TARGET_END_COMMIT", headCommit);
 
