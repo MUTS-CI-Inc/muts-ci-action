@@ -15,7 +15,7 @@ if (baseCommit && headCommit) {
   try {
     const projectPath = process.env.INPUT_PROJECT_PATH || ".";
 
-    const logCmd = `cd "${projectPath}" && git log --format="%an <%ae>" ${baseCommit}..${headCommit}`;
+    const logCmd = `cd "${projectPath}" && git log --format="%an <%ae>" ${baseCommit}^..${headCommit}`;
     const authorOutput = execSync(logCmd, { encoding: "utf8" });
 
 
