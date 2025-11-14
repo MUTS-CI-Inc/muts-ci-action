@@ -28,7 +28,7 @@ runs:
         echo $TARGET_REPO_PATH
 
     - name: "Run MUTS-CI image to get MUTS-CI binary"
-      uses: "docker://ekrogh18/muts-ci:0.2.1"
+      uses: "docker://ekrogh18/muts-ci:0.2.2"
 
     - name: Run MUTS-CI
       shell: bash
