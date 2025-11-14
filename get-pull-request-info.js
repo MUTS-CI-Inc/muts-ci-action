@@ -12,10 +12,11 @@ module.exports = async ({ github, context, core }) => {
 
   try {
     // Get authors from git log between commits
-    const authorOutput = execSync(
-      `git log --format="%an <%ae>" ${baseCommit}..${headCommit}`,
-      { encoding: "utf8" }
-    );
+    const projectPath = process.env['INPUT_PROJECT-PATH'] || process.env.project_path || ".";
+    const logCmd = `cd "${projectPath}" && git log --format="%an <%ae>" ${baseCommit}..${headCommit}`;
+
+    const authorOutput = execSync(logCmd, { encoding: "utf8" });
+
 
     const authorsRaw = authorOutput
       .split("\n")
