@@ -6,21 +6,48 @@ module.exports = async ({ github, context, core }) => {
   const endCommit = process.env.end_commit;
 
   if (startCommit && endCommit) {
-    console.log(`Environment override detected.`);
-    console.log(`Using provided commit range:`);
-    console.log(`  start_commit = ${startCommit}`);
-    console.log(`  end_commit   = ${endCommit}`);
+  console.log(`Environment override detected.`);
+  console.log(`Using commit range: ${endCommit}..${startCommit}`);
 
-    // Fake commit list where only author calculations matter
-    commits = [
-      { commit: { author: { name: 'unknown', email: 'unknown@example.com' } } },
-      { commit: { author: { name: 'unknown', email: 'unknown@example.com' } } }
-    ];
+  const { execSync } = require("child_process");
 
-    core.exportVariable('TARGET_START_COMMIT', startCommit);
-    core.exportVariable('TARGET_END_COMMIT', endCommit);
+  try {
+    // Get authors from git log between commits
+    const authorOutput = execSync(
+      `git log --format="%an <%ae>" ${endCommit}..${startCommit}`,
+      { encoding: "utf8" }
+    );
 
-  } else {
+    const authorsRaw = authorOutput
+      .split("\n")
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    // Deduplicate authors
+    const authorsSet = new Set(authorsRaw);
+    const authors = Array.from(authorsSet);
+
+    console.log("Authors found from git:");
+    authors.forEach(a => console.log("  " + a));
+
+    const commitCount = authorsRaw.length;
+    console.log(`Commit count from git: ${commitCount}`);
+
+    // Export variables
+    core.exportVariable("TARGET_AUTHORS", JSON.stringify(authors));
+    core.exportVariable("TARGET_COMMIT_COUNT", commitCount.toString());
+    core.exportVariable("TARGET_START_COMMIT", startCommit);
+    core.exportVariable("TARGET_END_COMMIT", endCommit);
+
+    // We're done — skip GitHub API logic completely
+    return;
+
+  } catch (err) {
+    console.error("Failed to read authors from git:");
+    console.error(err.message);
+    return;
+  }
+} else {
     // --- ORIGINAL FUNCTIONALITY ---
     try {
       if (context.payload.pull_request) {
