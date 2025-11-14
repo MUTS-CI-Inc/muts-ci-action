@@ -7,7 +7,7 @@ const headCommit = process.env.head_commit;
 
 if (baseCommit && headCommit) {
   console.log(`Environment override detected.`);
-  console.log(`Using commit range: ${baseCommit}..${headCommit}`);
+  console.log(`Using commit range: ${baseCommit}^..${headCommit}`);
   const { execSync } = require("child_process");
 
   try {
