@@ -37,6 +37,7 @@ runs:
       continue-on-error: true
       run: |
         cd $GITHUB_WORKSPACE/${TARGET_LEAF}
+        ls -la
         exe="./MUTS-CI"
         if [ ! -x "$exe" ]; then
           chmod +x "$exe" || true
