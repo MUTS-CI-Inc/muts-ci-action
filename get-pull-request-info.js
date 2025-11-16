@@ -8,9 +8,9 @@ const nrCommits = process.env.nr_commits;
 // const leaf = process.env.TARGET_LEAF;
 
 
-if (baseCommit && headCommit) {
-  console.log(`Environment override detected.`);
-  console.log(`Using commit range: ${baseCommit}^..${headCommit}`);
+if (nrCommits) {
+  // console.log(`Environment override detected.`);
+  // console.log(`Using commit range: ${baseCommit}^..${headCommit}`);
   const { execSync } = require("child_process");
 
   try {
