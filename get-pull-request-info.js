@@ -2,9 +2,10 @@ module.exports = async ({ github, context, core }) => {
   let commits = [];
 
 // --- NEW FEATURE: Allow override via environment variables ---
-const baseCommit = process.env.base_commit;
-const headCommit = process.env.head_commit;
-const leaf = process.env.TARGET_LEAF;
+// const baseCommit = process.env.base_commit;
+// const headCommit = process.env.head_commit;
+const nrCommits = process.env.nr_commits;
+// const leaf = process.env.TARGET_LEAF;
 
 
 if (baseCommit && headCommit) {
@@ -15,7 +16,8 @@ if (baseCommit && headCommit) {
   try {
     const projectPath = process.env.INPUT_PROJECT_PATH || ".";
 
-    const logCmd = `cd "${projectPath}" && git log --format="%an <%ae>" ${baseCommit}^..${headCommit}`;
+    const limit = Number(nrCommits) || 1;
+    const logCmd = `cd "${projectPath}" && git log -n ${limit} --format="%an <%ae>"`;
     const authorOutput = execSync(logCmd, { encoding: "utf8" });
 
 
@@ -31,16 +33,14 @@ if (baseCommit && headCommit) {
     console.log("Authors found from git:");
     authors.forEach(a => console.log("  " + a));
 
-    const commitCount = authorsRaw.length;
-    console.log(`Commit count from git: ${commitCount}`);
+    // const commitCount = authorsRaw.length;
+    // console.log(`Commit count from git: ${commitCount}`);
 
     // Export variables
     core.exportVariable("TARGET_AUTHORS", JSON.stringify(authors));
-    core.exportVariable("TARGET_COMMIT_COUNT", commitCount.toString());
+    core.exportVariable("TARGET_COMMIT_COUNT", nrCommits);
     core.exportVariable("TARGET_REPO_PATH", projectPath);
-    core.exportVariable("TARGET_LEAF", leaf);
-    // core.exportVariable("TARGET_START_COMMIT", baseCommit);
-    // core.exportVariable("TARGET_END_COMMIT", headCommit);
+    // core.exportVariable("TARGET_LEAF", leaf);
 
     // We're done — skip GitHub API logic completely
     return;
