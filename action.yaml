@@ -29,16 +29,16 @@ runs:
     - name: "Run MUTS-CI image to get MUTS-CI binary"
       uses: "docker://ekrogh18/muts-ci:0.2.2"
 
-    # - name: Run MUTS-CI
-    #   shell: bash
-    #   env:
-    #     TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }}
-    #     TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
-    #   continue-on-error: true
-    #   run: |
-    #     cd $GITHUB_WORKSPACE/${TARGET_LEAF}
-    #     exe="./MUTS-CI"
-    #     if [ ! -x "$exe" ]; then
-    #       chmod +x "$exe" || true
-    #     fi
-    #     "$exe" --file-list-json=$GITHUB_WORKSPACE/git-commits.json
+    - name: Run MUTS-CI
+      shell: bash
+      env:
+        TARGET_AUTHORS: ${{ env.TARGET_AUTHORS }}
+        TARGET_COMMIT_COUNT: ${{ env.TARGET_COMMIT_COUNT }}
+      continue-on-error: true
+      run: |
+        cd $GITHUB_WORKSPACE/${TARGET_LEAF}
+        exe="./MUTS-CI"
+        if [ ! -x "$exe" ]; then
+          chmod +x "$exe" || true
+        fi
+        "$exe" --file-list-json=$GITHUB_WORKSPACE/git-commits.json
