@@ -32,10 +32,12 @@ runs:
     - name: debug
       shell: bash
       run: |
+        pwd
         ls -la .
         cd cppcheck
+        pwd
         ls -la .
-        
+
     - name: Run MUTS-CI on Target project
       uses: "docker://ekrogh18/muts-ci-cppcheck:0.1.0"
 
