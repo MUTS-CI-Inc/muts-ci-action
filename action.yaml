@@ -33,6 +33,8 @@ runs:
       shell: bash
       run: |
         ls -la .
+        cd cppcheck
+        ls -la .
     # - name: Run MUTS-CI
     #   shell: bash
     #   env:
