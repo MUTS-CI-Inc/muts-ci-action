@@ -36,7 +36,13 @@ runs:
         cd cppcheck
         ls -la .
     - name: Run MUTS-CI on Target project
-      uses: "docker://{{ env.TARGET_PROJECT_IMAGE }}"
+      inputs:
+        TARGET_PROJECT_IMAGE:
+          description: "Docker image for target project"
+          required: true
+
+    - name: Run MUTS-CI on Target project
+      uses: "docker://${{ inputs.TARGET_PROJECT_IMAGE }}"
     # - name: Run MUTS-CI
     #   shell: bash
     #   env:
