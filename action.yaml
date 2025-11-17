@@ -36,6 +36,7 @@ runs:
         cd cppcheck
         ls -la .
     - name: Run MUTS-CI
+      shell: bash
       run: |
         docker run --rm \
           -e TARGET_AUTHORS="${TARGET_AUTHORS}" \
