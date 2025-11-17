@@ -5,7 +5,6 @@ module.exports = async ({ github, context, core }) => {
 // const baseCommit = process.env.base_commit;
 // const headCommit = process.env.head_commit;
 const nrCommits = process.env.NR_COMMITS;
-const target_project_image = process.env.TARGET_PROJECT_IMAGE;
 
 
 if (nrCommits) {
@@ -40,7 +39,6 @@ if (nrCommits) {
     core.exportVariable("TARGET_AUTHORS", JSON.stringify(authors));
     core.exportVariable("TARGET_COMMIT_COUNT", nrCommits);
     core.exportVariable("TARGET_REPO_PATH", projectPath);
-    core.exportVariable("TARGET_PROJECT_IMAGE", target_project_image);
 
     // We're done — skip GitHub API logic completely
     return;

@@ -35,13 +35,9 @@ runs:
         ls -la .
         cd cppcheck
         ls -la .
-    - name: Run MUTS-CI
-      shell: bash
-      run: |
-        docker run --rm \
-          -e TARGET_AUTHORS="${TARGET_AUTHORS}" \
-          -e TARGET_COMMIT_COUNT="${TARGET_COMMIT_COUNT}" \
-          "$TARGET_PROJECT_IMAGE"
+        
+    - name: Run MUTS-CI on Target project
+      uses: "docker://ekrogh18/muts-ci-cppcheck:0.1.0"
 
     # - name: Run MUTS-CI
     #   shell: bash
