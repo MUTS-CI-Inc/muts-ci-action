@@ -4,7 +4,8 @@ module.exports = async ({ github, context, core }) => {
 // --- NEW FEATURE: Allow override via environment variables ---
 // const baseCommit = process.env.base_commit;
 // const headCommit = process.env.head_commit;
-const nrCommits = process.env.nr_commits;
+const nrCommits = process.env.NR_COMMITS;
+const target_project = process.env.TARGET_PROJECT;
 
 
 if (nrCommits) {
@@ -39,6 +40,7 @@ if (nrCommits) {
     core.exportVariable("TARGET_AUTHORS", JSON.stringify(authors));
     core.exportVariable("TARGET_COMMIT_COUNT", nrCommits);
     core.exportVariable("TARGET_REPO_PATH", projectPath);
+    core.exportVariable("TARGET_PROJECT", target_project);
 
     // We're done — skip GitHub API logic completely
     return;
