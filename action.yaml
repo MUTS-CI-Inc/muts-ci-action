@@ -26,9 +26,13 @@ runs:
       run: |
         cat git-commits.json
 
-    # - name: "Run MUTS-CI image to get MUTS-CI binary"
-    #   uses: "docker://ekrogh18/muts-ci:0.2.2"
+    - name: "Run MUTS-CI image to get MUTS-CI binary"
+      uses: "docker://ekrogh18/muts-ci:0.2.2"
 
+    - name: debug
+      shell: bash
+      run: |
+        ls -la .
     # - name: Run MUTS-CI
     #   shell: bash
     #   env:
