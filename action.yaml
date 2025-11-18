@@ -27,7 +27,7 @@ runs:
         cat git-commits.json
 
     - name: "Run MUTS-CI image to get MUTS-CI binary"
-      uses: "docker://ekrogh18/muts-ci:0.3.0"
+      uses: "docker://ekrogh18/muts-ci:0.3.0_x"
 
     - name: Run MUTS-CI on Target project
       uses: "docker://ekrogh18/muts-ci-googletest:0.1.0"
