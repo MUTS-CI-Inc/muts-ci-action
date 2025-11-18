@@ -29,5 +29,5 @@ runs:
     - name: "Run MUTS-CI image to get MUTS-CI binary"
       uses: "docker://ekrogh18/muts-ci:0.2.2"
 
-    # - name: Run MUTS-CI on Target project
-    #   uses: "docker://ekrogh18/muts-ci-cppcheck:0.1.1"
+    - name: Run MUTS-CI on Target project
+      uses: "docker://ekrogh18/muts-ci-googletest:0.1.0
